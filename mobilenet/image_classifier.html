@@ -2,7 +2,8 @@
   <head>
     <style>
       body {
-        background-color : #777;
+        background-color : #555;
+        color:#ccc;
       }
     </style>
     
@@ -13,20 +14,63 @@
 
     <!-- Place your code in the script tag below. You can also use an external .js file -->
     <script>
-      // Load the model.
-      mobilenet.load().then(model => {
-        // Classify the image.
-        const img = document.getElementById('img');
+      let model;
+      let img;
+      window.onload = () => {
+        // Load the model.
+        mobilenet.load().then(m => {
+          model = m;
+          img = document.getElementById('img');
+          classify(img);
+        });
+      }
+
+      function changeImage(el) {
+        if (el.files.length > 0) {
+          img.src = URL.createObjectURL(el.files[0]);
+          img.onload = ()=>classify(img);
+        }        
+      }
+
+      function classify(image) {
         const result = document.getElementById('result');
-        model.classify(img).then(predictions => {
+        model.classify(image).then(predictions => {
           result.innerHTML = "Predictions: " + JSON.stringify(predictions);
         });
-      });
+      }
     </script>
   </head>
   <body>
     <!-- Replace this with your image. Make sure CORS settings allow reading the image! -->
-    <img id="img" src="cat.png"></img>
+    <img crossorigin = "anonymous" id="img" src="https://truemaxdh.github.io/ml_js/mobilenet/cat.png"></img>
     <div id="result"></div>
+    change image : <input type="file" accept="image/*" onchange="changeImage(this);">
+    F<video id="player" controls autoplay></video>
+    <button id="capture">Capture</button>
+    <canvas id="canvas" width=320 height=240></canvas>
+    <script>
+      const player = document.getElementById('player');
+      const canvas = document.getElementById('canvas');
+      const context = canvas.getContext('2d');
+      const captureButton = document.getElementById('capture');
+    
+      const constraints = {
+        video: true,
+      };
+    
+      captureButton.addEventListener('click', () => {
+        // Draw the video frame to the canvas.
+        context.drawImage(player, 0, 0, canvas.width, canvas.height);
+
+        // Stop all video streams.
+        player.srcObject.getVideoTracks().forEach(track => track.stop());
+      });
+    
+      // Attach the video stream to the video element and autoplay.
+      navigator.mediaDevices.getUserMedia(constraints)
+        .then((stream) => {
+          player.srcObject = stream;
+        });
+    </script>
   </body>
 </html>
