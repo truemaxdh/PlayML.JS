@@ -2,7 +2,7 @@
   <head>
     <style>
       body {
-        background-color : #aaa;
+        background-color : #777;
       }
     </style>
     
@@ -13,17 +13,13 @@
 
     <!-- Place your code in the script tag below. You can also use an external .js file -->
     <script>
-      // Notice there is no 'import' statement. 'mobilenet' and 'tf' is
-      // available on the index-page because of the script tag above.
-
-      const img = document.getElementById('img');
-
       // Load the model.
       mobilenet.load().then(model => {
         // Classify the image.
+        const img = document.getElementById('img');
+        const result = document.getElementById('result');
         model.classify(img).then(predictions => {
-          console.log('Predictions: ');
-          console.log(predictions);
+          result.innerHTML = "Predictions: " + JSON.stringify((predictions);
         });
       });
     </script>
@@ -31,5 +27,6 @@
   <body>
     <!-- Replace this with your image. Make sure CORS settings allow reading the image! -->
     <img id="img" src="cat.png"></img>
+    <div id="result"></div>
   </body>
 </html>
