@@ -17,10 +17,12 @@
       let model;
       let img;
       window.onload = () => {
+        img = document.getElementById('img');
+        img.onload = ()=>classify(img);
+
         // Load the model.
         mobilenet.load().then(m => {
-          model = m;
-          img = document.getElementById('img');
+          model = m;          
           classify(img);
         });
       }
@@ -28,7 +30,6 @@
       function changeImage(el) {
         if (el.files.length > 0) {
           img.src = URL.createObjectURL(el.files[0]);
-          img.onload = ()=>classify(img);
         }        
       }
 
@@ -61,6 +62,7 @@
       captureButton.addEventListener('click', () => {
         // Draw the video frame to the canvas.
         context.drawImage(player, 0, 0, canvas.width, canvas.height);
+        img.src = canvas.toDataURL();
 
         // Stop all video streams.
         player.srcObject.getVideoTracks().forEach(track => track.stop());
