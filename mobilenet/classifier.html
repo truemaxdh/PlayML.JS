@@ -1,0 +1,132 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+      #controller {
+        z-index: 1;
+        position : fixed;
+        bottom : 0;
+        background-color : rgba(0, 0, 0, 0.5);
+        color : #eee;
+      }
+    </style>
+    <!-- Load TensorFlow.js. This is required to use MobileNet. -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.1"> </script>
+    <!-- Load the MobileNet model. -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@1.0.0"> </script>
+
+    <!-- Place your code in the script tag below. You can also use an external .js file -->
+    <script>
+      let model;
+      let oCapture = {
+        img : new Image(),
+        canvas : null,
+        cotext : null,
+        player : null,
+        btnCamOnOff : null,
+        btnCapture : null,
+        constraints : {video: true},
+        initW : 480,
+        initH : 720,
+        w : this.initW,
+        h : this.initH,
+        resize : function() {
+          if (window.innerWidth < this.initW && window.innerHeight < this.initH) {
+              this.w = window.innerWidth;
+              this.h = window.innerHeight;
+          } else {
+              this.w = this.initW;
+              this.h = this.initH;
+          }
+          this.canvas.width = this.w;
+          this.canvas.height = this.h;
+          this.player.width = this.w;
+          this.player.height = this.h;
+        }
+      };
+                
+      window.onload = () => {
+        oCapture.img.crossOrigin = "anonymous";
+        oCapture.canvas = document.getElementById('canvas');
+        oCapture.context = canvas.getContext("2d");
+        oCapture.player = document.getElementById('player');
+        oCapture.btnCamOnOff = document.getElementById('camOnOff');
+        oCapture.btnCapture = document.getElementById('capture');
+        oCapture.player.style.display = "none";
+        
+        oCapture.btnCamOnOff.addEventListener('click', () => {
+          oCapture.canvas.style.display = "none";
+          oCapture.player.style.display = "block";
+          
+          try {
+            // Attach the video stream to the video element and autoplay.
+            navigator.mediaDevices.getUserMedia(oCapture.constraints)
+              .then((stream) => {
+                oCapture.player.srcObject = stream;
+              });  
+          } catch(e) {alert(e);}          
+        });
+
+        oCapture.btnCapture.addEventListener('click', () => {
+          oCapture.canvas.style.display = "block";          
+          try {
+            // Draw the video frame to the canvas.
+            oCapture.context.drawImage(oCapture.player, 0, 0, oCapture.canvas.width, oCapture.canvas.height);
+
+            // Stop all video streams.
+            oCapture.player.srcObject.getVideoTracks().forEach(track => track.stop());
+          } catch(e) {}          
+          
+          oCapture.player.style.display = "none";
+        });
+
+        oCapture.img.onload = ()=>{
+          const imgW = oCapture.img.width;
+          const imgH = oCapture.img.height;
+          const scale = Math.min(oCapture.w / imgW, oCapture.h / imgH);
+          oCapture.context.drawImage(oCapture.img, 0, 0, imgW, imgH, 0, 0, imgW * scale, imgH * scale);
+          classify();
+        }
+
+        oCapture.resize();
+        
+        // Load the model.
+        mobilenet.load().then(m => {
+          model = m;
+          oCapture.img.src = "https://truemaxdh.github.io/PlayML.js/mobilenet/cat.png";
+        });
+
+        /////////////////
+        
+      }
+
+      function changeImage(el) {
+        if (el.files.length > 0) {
+          oCapture.img.src = URL.createObjectURL(el.files[0]);
+        }        
+      }
+
+      function classify() {
+        const result = document.getElementById('result');
+        model.classify(canvas).then(predictions => {
+          result.innerHTML = "";
+          predictions.forEach((elem)=>{
+            result.innerHTML += "<br><b>" + elem.className + "</b> " 
+              + "<font size=2>" + elem.probability + "</font>";
+          });           
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Replace this with your image. Make sure CORS settings allow reading the image! -->
+    <canvas id="canvas"></canvas>
+    <video id="player" autoplay></video>
+    <div id="controller">
+      <div id="result"></div>
+      <input type="file" accept="image/*" onchange="changeImage(this);">
+      <button id="camOnOff">CamOn</button>
+      <button id="capture">Capture</button>
+    </div>
+  </body>
+</html>
