@@ -39,7 +39,7 @@
         w : this.initW,
         h : this.initH,
         resize : function() {
-          if (window.innerWidth < this.initW && window.innerHeight < this.initH) {
+          if (window.innerWidth < this.initW || window.innerHeight < this.initH) {
               this.w = window.innerWidth;
               this.h = window.innerHeight;
           } else {
@@ -73,7 +73,7 @@
               .then((stream) => {
                 oCapture.player.srcObject = stream;
               });  
-          } catch(e) {alert(e);}          
+          } catch(e) {}          
         });
 
         oCapture.btnCamRear.addEventListener('click', () => {
@@ -86,7 +86,7 @@
               .then((stream) => {
                 oCapture.player.srcObject = stream;
               });  
-          } catch(e) {alert(e);}          
+          } catch(e) {}          
         });
 
         oCapture.btnCapture.addEventListener('click', () => {
@@ -98,8 +98,8 @@
             // Stop all video streams.
             oCapture.player.srcObject.getVideoTracks().forEach(track => track.stop());
           } catch(e) {}          
-          
           oCapture.player.style.display = "none";
+          classify();
         });
 
         oCapture.img.onload = ()=>{
