@@ -10,7 +10,9 @@
         z-index: 1;
         position : fixed;
         bottom : 0;
-        width: 100%;
+        width : 100%;
+        margin : 0px;
+        padding : 3px;
         background-color : rgba(0, 0, 0, 0.5);
         color : #eee;
       }
@@ -140,8 +142,8 @@
         model.classify(canvas).then(predictions => {
           result.innerHTML = "";
           predictions.forEach((elem)=>{
-            result.innerHTML += "<br><b>" + elem.className + "</b> " 
-              + "<font size=2>" + elem.probability + "</font>";
+            result.innerHTML += "<b>" + elem.className + "</b> " 
+              + "<font size=2>" + elem.probability + "</font><br>";
           });           
         });
       }
@@ -153,7 +155,7 @@
     <video id="player" autoplay></video>
     <div id="controller">
       <div id="result"></div>
-      <br>
+      
       <!-- <input type="file" accept="image/*" onchange="changeImage(this);"> -->
       <label for="file" class="button">File</label> 
       <input type="file" id="file" accept="image/*" onchange="changeImage(this);">
