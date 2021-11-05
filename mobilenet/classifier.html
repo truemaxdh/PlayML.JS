@@ -10,8 +10,18 @@
         z-index: 1;
         position : fixed;
         bottom : 0;
+        width: 100%;
         background-color : rgba(0, 0, 0, 0.5);
         color : #eee;
+      }
+
+      input[type="file"] {
+        position: absolute;
+        width: 0;
+        height: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 0;
       }
     </style>
     <!-- Load TensorFlow.js. This is required to use MobileNet. -->
@@ -143,7 +153,10 @@
     <video id="player" autoplay></video>
     <div id="controller">
       <div id="result"></div>
-      <input type="file" accept="image/*" onchange="changeImage(this);">
+      <br>
+      <!-- <input type="file" accept="image/*" onchange="changeImage(this);"> -->
+      <label for="file" class="button">File</label> 
+      <input type="file" id="file" accept="image/*" onchange="changeImage(this);">
       <button id="camFront">FrontCam</button>
       <button id="camRear">RearCam</button>
       <button id="capture">Capture</button>
