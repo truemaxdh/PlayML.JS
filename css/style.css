@@ -1,32 +1,39 @@
 body {
     background-color:#333;
     color:#ccc;
-  }
-  
-  a {
-    color : #ccc;
-  }
+}
 
-  .square {
-    line-height:150px;
-    width:150px;
-    height:150px;  
-    text-align:center;
-    font-size:14px;
-    color:#83BD31;
-    font-weight:bold;
-    float:left;
-    border:1px solid #83BD31;
-    /*word-wrap:break-word;*/
-    /*border-radius:75px;*/
-    margin:7px;
-    cursor:pointer;
-    /*background:white;*/
-    /*background-position:center;
-    background-size:100% 100%;*/
-  }
+.square {
+  line-height:150px;
+  width:150px;
+  height:150px;  
+  text-align:center;
+  font-size:14px;
+  color:#83BD31;
+  font-weight:bold;
+  float:left;
+  border:1px solid #83BD31;
+  /*word-wrap:break-word;*/
+  /*border-radius:75px;*/
+  margin:7px;
+  cursor:pointer;
+  /*background:white;*/
+  /*background-position:center;
+  background-size:100% 100%;*/
+}
 
-  .square:hover {
-    background:#73AD21;
-    color:#ccc;
-  }
+.square:hover {
+  background:#73AD21;
+  color:#ccc;
+}
+
+button, .button {
+  font-weight: bold;
+  font-size: 14px;
+  color: #ccc;
+  background-color: #333;
+  padding: 3px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-decoration: none;
+}
